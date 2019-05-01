@@ -1,0 +1,8 @@
+#canvas {
+  display: block;
+  /*background-image: url('https://ewedit.files.wordpress.com/2018/06/taylor-swift.jpg');*/
+  background-color: black;
+  background-position: center;
+  -webkit-background-size: cover;
+  background-size: cover;
+}

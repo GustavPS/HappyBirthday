@@ -25,7 +25,12 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery-countdown/dist/jquery.countdown.min.js",
+              "node_modules/jquery.fireworks/jquery.fireworks.js",
+              "node_modules/moment/moment.js"
+            ],
             "es5BrowserSupport": true
           },
           "configurations": {
@@ -82,7 +87,12 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery-countdown/dist/jquery.countdown.min.js",
+              "node_modules/jquery.fireworks/jquery.fireworks.js",
+              "node_modules/moment/moment.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

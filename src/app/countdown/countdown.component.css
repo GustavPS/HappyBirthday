@@ -1,0 +1,36 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: table;
+}
+
+.countdown-box {
+  display: table;
+  float: left;
+  font-family: 'ts-font';
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  width: 100%;
+}
+
+.label {
+  font-size: 30px;
+}
+.value {
+  font-size: 100px;
+}
+
+@media only screen and (min-width: 600px) {
+  .countdown-box {
+    width: auto;
+    margin: 0 25px;
+  }
+}
