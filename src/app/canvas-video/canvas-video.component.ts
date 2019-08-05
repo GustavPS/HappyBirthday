@@ -47,11 +47,13 @@ export class CanvasVideoComponent implements OnInit {
   }
 
   draw = () => {
+    /*
     this.ctx.clearRect(0, 0, this.c.width, this.c.height);
     for (let post: TwitterPost of this.twitter) {
       post.render(this.ctx);
     }
     window.requestAnimationFrame(this.draw);
+    */
   }
 
 }
