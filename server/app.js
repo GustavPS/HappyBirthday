@@ -7,6 +7,10 @@ var Files = {};
 var AllowedExtensions = ['jpg', 'jpeg', 'gif', 'png', 'mp4', 'avi', 'flv'];
 var Database = "./messages.db";
 
+if (!fs.existsSync("Media")) {
+    fs.mkdirSync("Media");
+}
+
 function generateId(extension) {
     id = "";
     while (true) {
@@ -18,7 +22,31 @@ function generateId(extension) {
     return id;
 }
 
+function removeFile(id) {
+    try {
+        fs.closeSync(Files[id]["Handler"]);
+        fs.unlinkSync("Media/" + id);
+    } catch(err) {
+        console.log("Error removing file");
+        console.log(err);
+    }
+}
+
 io.sockets.on('connection', function(socket) {
+
+    // If client started to send a file but it's not finished when it disconnects
+    // remove the file, close the filehandler and remove the File object from RAM
+    socket.on('disconnect', function() {
+        if (socket.fileId != undefined) {
+            console.log(socket.fileId + ": Client disconnected");
+        }
+        if (!socket.finished && socket.fileId != undefined) {
+            console.log(socket.fileId + ": Upload was not finished, removing file.");
+            removeFile(socket.fileId);
+        }
+        delete Files[socket.fileId];
+    });
+
     socket.on('start', function(data) {
         var id;
         // Check so it is either a image or video that is being sent.
@@ -36,10 +64,12 @@ io.sockets.on('connection', function(socket) {
             return;
         }
 
-        socket.FileNotAllowed = false;
 
         // Generate a unique id
         id = generateId(data['Extension']);
+        socket.fileId = id;
+        socket.FileNotAllowed = false;
+        socket.finished = false;
 
         Files[id] = {
             FileSize:   data['Size'],
@@ -57,7 +87,7 @@ io.sockets.on('connection', function(socket) {
             if (err) {
                 console.log(err);
             } else {
-                console.log("Recieving file, id: " + id);
+                console.log(socket.fileId + ": Recieving file");
                 Files[id]['Handler'] = fd;
                 socket.emit('moreData', { 'Place': Place, Percent: 0, "id": id });
             }
@@ -66,7 +96,7 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('upload', function(data) {
         if (socket.FileNotAllowed) {
-            console.log("Got an upload request, but the file has been marked as not allowed.");
+            console.log(socket.fileId + ": Got an upload request, but the file has been marked as not allowed.");
             return;
         }
         var id = data['id'];
@@ -76,13 +106,14 @@ io.sockets.on('connection', function(socket) {
         if (Files[id]['Downloaded'] == Files[id]['FileSize']) {
             socket.emit('done');
             fs.write(Files[id]['Handler'], Files[id]['Data'], null, 'Binary', function(err, Writen) {
-                console.log("Saved file with id: " + id);
+                console.log(socket.fileId + ": Saved file");
                 // Save the message and the filename to the database
                 var db = new sqlite3.Database(Database, function(err) {
                     if (err) {
                         console.log(err.message);
                         return;
                     }
+
                     db.run(
                         "INSERT INTO Message (file, message, tumblr, twitter, instagram, timestamp) VALUES(?, ?, ?, ?, ?, ?);",
                         id,
@@ -92,6 +123,11 @@ io.sockets.on('connection', function(socket) {
                         Files[id]["Message"]["Instagram"],
                         Date.now()
                     );
+
+                    // Set to finished, close the filehandler and delete the file object in RAM.
+                    socket.finished = true;
+                    fs.closeSync(Files[id]["Handler"]);
+                    delete Files[id];
                 });
                 db.close();
             });
