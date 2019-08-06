@@ -5,18 +5,23 @@ import { AppComponent } from './app.component';
 import { CountdownComponent } from './countdown/countdown.component';
 import { FireworkComponent } from './firework/firework.component';
 import { CanvasVideoComponent } from './canvas-video/canvas-video.component';
+import { ContributeComponent } from './contribute/contribute.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+const config: SocketIoConfig = { url: 'http://localhost:5001', options: {} };
 
 @NgModule({
   declarations: [
     AppComponent,
     CountdownComponent,
     FireworkComponent,
-    CanvasVideoComponent
+    CanvasVideoComponent,
+    ContributeComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    SocketIoModule.forRoot(config)
   ],
-  providers: [],
+  providers: [{ provide: 'Window',  useValue: window }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

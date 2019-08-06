@@ -1,0 +1,25 @@
+<div id="container">
+  <form id="submitform" onsubmit="return false;">
+    <label for="message">Message to Taylor:</label>
+    <textarea name="message" id="message" placeholder="Tell Taylor why you love her, how she helped you or simply wish her a happy birthday!"></textarea>
+    <label for="twitter">Twitter username:</label>
+    <input type="text" name="twitter" id="twitter" placeholder="Your twitter username (optional)" />
+    <label for="instagram">Instagram username:</label>
+    <input type="text" name="instagram" id="instagram" placeholder="Your twitter username (optional)"/>
+    <label for="tumblr">Tumblr username: </label>
+    <input type="text" name="tumblr" id="tumblr" placeholder="Your twitter username (optional)"/>
+    <br>
+    <label for="image">Optional image/video to send</label>
+    <input type="file" id="image" name="image" />
+    <br>
+    <input type="submit" id="submit" value="Submit" class="submit"/>
+  </form>
+  <div id="progress">
+    <div id="progressBar">
+      <div id="innerProgressBar"></div>
+      <span id="percent">0%</span>
+    </div>
+    <a href="/" id="back">Back</a>
+  </div>
+
+</div>
