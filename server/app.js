@@ -1,8 +1,23 @@
-var io      = require('socket.io')(),
-    fs      = require('fs'),
-    exec    = require('child_process').exec,
+ var fs      = require('fs');
+var https = require('https');
+var server = https.createServer({
+	key: fs.readFileSync('./private.key'),
+	cert: fs.readFileSync('./certificate.crt'),
+	ca: fs.readFileSync('./ca_bundle.crt'),
+	requestCert: false,
+	rejectUnauthorized: false
+});
+
+server.listen(5001);
+var io      = require('socket.io').listen(server);
+
+
+
+var    exec    = require('child_process').exec,
     util    = require('util'),
     sqlite3 = require('sqlite3').verbose();
+
+
 var Files = {};
 var AllowedExtensions = ['jpg', 'jpeg', 'gif', 'png', 'mp4', 'avi', 'flv'];
 var Database = "./messages.db";
@@ -169,4 +184,3 @@ io.sockets.on('connection', function(socket) {
     })
 });
 
-io.listen(5001);
