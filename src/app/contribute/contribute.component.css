@@ -1,9 +1,9 @@
 #containerComponent {
     width: auto;
     min-height: 300px;
-    background-color: #d5b1b18f;
+    background-color: #fefff74f;
     padding: 20px;
-    box-shadow: 0px 7px 25px -9px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 7px 25px 2px rgba(0, 0, 0, 0.4);
     display: none;
 }
 form {
@@ -53,7 +53,7 @@ input, textarea {
 .submit {
     width: 100%;
     text-align: center;
-    background-color: #598659;
+    background-color: #578c57d1;
     cursor: pointer;
 }
 
@@ -97,6 +97,11 @@ input, textarea {
     width: 100%;
 }
 
+#progress p {
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
+
 .close {
     color: white;
     text-shadow: 1px 1px 2px black;
@@ -109,4 +114,23 @@ input, textarea {
 }
 span.close {
     font-size: 18px;
+}
+
+#fileError {
+    color: #af0000;
+    text-shadow: none;
+    font-size: 13px;
+}
+
+@media only screen and (max-width: 800px) {
+    #containerComponent {
+        padding: 0;
+        text-align: center;
+        background-color: #f1f1f1fc;
+    }
+    label {
+        font-size: 18px;
+        text-align: left;
+        margin-bottom: 5px;
+    }
 }

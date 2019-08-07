@@ -117,6 +117,24 @@ app-countdown {
   width: 100%;
 }
 
+@media only screen and (max-width: 800px) {
+  #centerContainer {
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  h1 {
+    font-size: 25px;
+    margin-bottom: 50px;
+  }
+
+  app-contribute {
+    left: 0;
+    transform: none;
+    width: 100%;
+  }
+}
+
 @keyframes cat_animation {
   0% {
     transform: scale(0);

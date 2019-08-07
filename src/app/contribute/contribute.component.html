@@ -1,8 +1,8 @@
 <div id="containerComponent">
   <span class="close" id="close">X</span>
   <form id="submitform" onsubmit="return false;">
-    <label for="message">Message to Taylor:</label>
-    <textarea name="message" id="message" placeholder="Tell Taylor why you love her, how she helped you or simply wish her a happy birthday!"></textarea>
+    <label for="message" id="messageLabel">Message to Taylor:</label>
+    <textarea required name="message" id="message" placeholder="Tell Taylor why you love her, how she helped you or simply wish her a happy birthday!"></textarea>
     <label for="twitter">Twitter username:</label>
     <input type="text" name="twitter" id="twitter" placeholder="Your twitter username (optional)" />
     <label for="instagram">Instagram username:</label>
@@ -11,8 +11,12 @@
     <input type="text" name="tumblr" id="tumblr" placeholder="Your twitter username (optional)"/>
     <br>
     <label for="image">Optional image/video to send</label>
-    <input type="file" id="image" name="image" />
-    <p>Max 150MB</p>
+    <input type="file" id="image" name="image" accept=".jpg,.jpeg,.gif,.png,.mp4,.avi,.flv" />
+    <span id="fileError"></span>
+    <p>Max: 150MB</p>
+    <p style="font-size: 10px;">
+      Posts made here will be visible on the site the 13th of December 2019.
+    </p>
     <input type="submit" id="submit" value="Submit" class="submit"/>
   </form>
   <div id="progress">
@@ -20,6 +24,8 @@
       <div id="innerProgressBar"></div>
       <span id="percent">0%</span>
     </div>
+    <p id="warning">Please don't close this window before the upload is finished.</p>
+    <p id="thankyou">Thank you for the message, hopefully Taylor will see it!</p>
     <span class="close" id="back" (click)="this.Close()">Close</span>
   </div>
 

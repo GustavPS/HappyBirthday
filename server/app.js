@@ -32,8 +32,27 @@ function removeFile(id) {
     }
 }
 
-io.sockets.on('connection', function(socket) {
+function saveToDb(message, tumblr, twitter, instagram, callback, id="") {
+    var db = new sqlite3.Database(Database, function(err) {
+        if (err) {
+            console.log(err.message);
+            return;
+        }
+        db.run(
+            "INSERT INTO Message (file, message, tumblr, twitter, instagram, timestamp) VALUES(?, ?, ?, ?, ?, ?);",
+            id,
+            message,
+            tumblr,
+            twitter,
+            instagram,
+            Date.now()
+        );
+        callback();
+    });
+    db.close();
+}
 
+io.sockets.on('connection', function(socket) {
     // If client started to send a file but it's not finished when it disconnects
     // remove the file, close the filehandler and remove the File object from RAM
     socket.on('disconnect', function() {
@@ -52,27 +71,14 @@ io.sockets.on('connection', function(socket) {
 
         // If user only uploaded text
         if (!data['SendFile']) {
-            var db = new sqlite3.Database(Database, function(err) {
-                if (err) {
-                    console.log(err.message);
-                    return;
-                }
-
-                db.run(
-                    "INSERT INTO Message (message, tumblr, twitter, instagram, timestamp) VALUES(?, ?, ?, ?, ?);",
-                    data["Message"],
-                    data["Tumblr"],
-                    data["Twitter"],
-                    data["Instagram"],
-                    Date.now()
-                );
-
-                // Set to finished, close the filehandler and delete the file object in RAM.
-                socket.finished = true;
-                console.log("Saved text message");
-                socket.emit('done');
-            });
-            db.close();
+            socket.emit('accepted');
+            saveToDb(data["Message"], data["Tumblr"],
+                     data["Twitter"], data["Instagram"], () => {
+                        // Set to finished, close the filehandler and delete the file object in RAM.
+                        socket.finished = true;
+                        console.log("Saved text message");
+                        socket.emit('done');
+                    }, id);
 
         // If user uploaded text and/or image/video
         } else {
@@ -91,6 +97,8 @@ io.sockets.on('connection', function(socket) {
                 socket.FileNotAllowed = true;            
                 return;
             }
+            // Send to client that we have accepted the upload
+            socket.emit('accepted');
 
 
             // Generate a unique id
@@ -133,32 +141,17 @@ io.sockets.on('connection', function(socket) {
         Files[id]['Data'] += data['Data'];
         // If the file has been 100% received
         if (Files[id]['Downloaded'] == Files[id]['FileSize']) {
-            socket.emit('done');
             fs.write(Files[id]['Handler'], Files[id]['Data'], null, 'Binary', function(err, Writen) {
                 console.log(socket.fileId + ": Saved file");
                 // Save the message and the filename to the database
-                var db = new sqlite3.Database(Database, function(err) {
-                    if (err) {
-                        console.log(err.message);
-                        return;
-                    }
-
-                    db.run(
-                        "INSERT INTO Message (file, message, tumblr, twitter, instagram, timestamp) VALUES(?, ?, ?, ?, ?, ?);",
-                        id,
-                        Files[id]["Message"]["Message"],
-                        Files[id]["Message"]["Tumblr"],
-                        Files[id]["Message"]["Twitter"],
-                        Files[id]["Message"]["Instagram"],
-                        Date.now()
-                    );
-
-                    // Set to finished, close the filehandler and delete the file object in RAM.
-                    socket.finished = true;
-                    fs.closeSync(Files[id]["Handler"]);
-                    delete Files[id];
-                });
-                db.close();
+                saveToDb(Files[id]["Message"]["Message"], Files[id]["Message"]["Tumblr"],
+                         Files[id]["Message"]["Twitter"], Files[id]["Message"]["Instagram"], () => {
+                            // Set to finished, close the filehandler and delete the file object in RAM.
+                            socket.finished = true;
+                            fs.closeSync(Files[id]["Handler"]);
+                            delete Files[id];
+                            socket.emit('done');
+                         }, id);
             });
         // Reset the buffer if it reaches 10MB
         } else if(Files[id]['Data'].length > 10485760) {
