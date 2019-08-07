@@ -55,6 +55,7 @@ input, textarea {
     text-align: center;
     background-color: #578c57d1;
     cursor: pointer;
+    display: none;
 }
 
 #progress {
@@ -116,7 +117,7 @@ span.close {
     font-size: 18px;
 }
 
-#fileError {
+#fileError, #connection_status {
     color: #af0000;
     text-shadow: none;
     font-size: 13px;
