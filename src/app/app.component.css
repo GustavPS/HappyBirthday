@@ -1,5 +1,5 @@
 #background {
-  background-image: url('../assets/bg.jpg');
+  background-image: url('../assets/bg.png');
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -17,10 +17,6 @@ h1 {
   font-family: 'ts-font';
   text-shadow: 1px 1px 2px black;
   font-size: 50px;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  text-align: center;
   color: white;
 }
 
@@ -29,7 +25,6 @@ footer p {
   text-shadow: 1px 1px 2px black;
   color: white;
   font-size: 12px;
-  text-align: center;
 }
 
 footer p a {
@@ -84,13 +79,42 @@ app-contribute {
   position: absolute;
   z-index: 11;
   left: 50%;
-  top: 25px;
   transform: translateX(-50%);
 }
 footer {
-  background-color: #beb3b3f2;
-  z-index: 20;
   position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 20;
+  display: table;
+  width: auto;
+}
+
+#button {
+  display: block;
+  position: relative;
+  width: 100%;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-color: white;
+}
+#button h1 {
+  cursor: pointer;
+}
+
+app-countdown {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+  display: table;
+}
+
+#centerContainer{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 100%;
 }
 
 @keyframes cat_animation {

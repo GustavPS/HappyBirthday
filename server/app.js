@@ -49,49 +49,78 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('start', function(data) {
         var id;
-        // Check so it is either a image or video that is being sent.
-        if (!AllowedExtensions.includes(data['Extension'])) {
-            console.log("User tried to send invalid file.");
-            socket.emit('FileNotAllowed', 'extension');
-            socket.FileNotAllowed = true;     
-            return;
-        }
-        // Check so the file is smaller then or equal to 150MB
-        if (data['Size'] > 157286400) {
-            console.log("User tried to send a file bigger then 150MB.");
-            socket.emit('FileNotAllowed', 'size');
-            socket.FileNotAllowed = true;            
-            return;
-        }
 
+        // If user only uploaded text
+        if (!data['SendFile']) {
+            var db = new sqlite3.Database(Database, function(err) {
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
 
-        // Generate a unique id
-        id = generateId(data['Extension']);
-        socket.fileId = id;
-        socket.FileNotAllowed = false;
-        socket.finished = false;
+                db.run(
+                    "INSERT INTO Message (message, tumblr, twitter, instagram, timestamp) VALUES(?, ?, ?, ?, ?);",
+                    data["Message"],
+                    data["Tumblr"],
+                    data["Twitter"],
+                    data["Instagram"],
+                    Date.now()
+                );
 
-        Files[id] = {
-            FileSize:   data['Size'],
-            Data:       "",
-            Downloaded: 0,
-            Message: {
-                "Message": data["Message"],
-                "Tumblr": data["Tumblr"],
-                "Twitter": data["Twitter"],
-                "Instagram": data["Instagram"]
+                // Set to finished, close the filehandler and delete the file object in RAM.
+                socket.finished = true;
+                console.log("Saved text message");
+                socket.emit('done');
+            });
+            db.close();
+
+        // If user uploaded text and/or image/video
+        } else {
+
+            // Check so it is either a image or video that is being sent.
+            if (!AllowedExtensions.includes(data['Extension'])) {
+                console.log("User tried to send invalid file.");
+                socket.emit('FileNotAllowed', 'extension');
+                socket.FileNotAllowed = true;     
+                return;
             }
-        };
-        var Place = 0;
-        fs.open("Media/" + id, 'a', 0755, function(err, fd) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(socket.fileId + ": Recieving file");
-                Files[id]['Handler'] = fd;
-                socket.emit('moreData', { 'Place': Place, Percent: 0, "id": id });
+            // Check so the file is smaller then or equal to 150MB
+            if (data['Size'] > 157286400) {
+                console.log("User tried to send a file bigger then 150MB.");
+                socket.emit('FileNotAllowed', 'size');
+                socket.FileNotAllowed = true;            
+                return;
             }
-        });
+
+
+            // Generate a unique id
+            id = generateId(data['Extension']);
+            socket.fileId = id;
+            socket.FileNotAllowed = false;
+            socket.finished = false;
+
+            Files[id] = {
+                FileSize:   data['Size'],
+                Data:       "",
+                Downloaded: 0,
+                Message: {
+                    "Message": data["Message"],
+                    "Tumblr": data["Tumblr"],
+                    "Twitter": data["Twitter"],
+                    "Instagram": data["Instagram"]
+                }
+            };
+            var Place = 0;
+            fs.open("Media/" + id, 'a', 0755, function(err, fd) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(socket.fileId + ": Recieving file");
+                    Files[id]['Handler'] = fd;
+                    socket.emit('moreData', { 'Place': Place, Percent: 0, "id": id });
+                }
+            });
+        }
     });
 
     socket.on('upload', function(data) {

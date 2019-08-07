@@ -2,7 +2,10 @@
 
 <div id="background"></div>
 <app-firework></app-firework>
-<app-countdown (done)="countdownDone()"></app-countdown>
+<div id="centerContainer">
+  <app-countdown (done)="countdownDone()"></app-countdown>
+  <div (click)="this.open()" id="button"><h1>Send Taylor a Birthday wish!</h1></div>
+</div>
 <img src="assets/cats.png" />
 <img src="assets/cats.png" style="float: right;"/>
 

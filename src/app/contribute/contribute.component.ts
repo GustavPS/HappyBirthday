@@ -1,4 +1,4 @@
-import { Inject, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 
 declare let window: any;
@@ -34,6 +34,7 @@ export class ContributeComponent implements OnInit {
   }
 
   ready() { 
+    document.getElementById('close').addEventListener('click', this.Close);
     if(window.File && window.FileReader){ //These are the relevant HTML5 objects that we are going to use 
         document.getElementById('submit').addEventListener('click', this.StartUpload);  
         document.getElementById('image').addEventListener('change', this.FileChosen);
@@ -46,10 +47,10 @@ export class ContributeComponent implements OnInit {
 
 
   StartUpload = () => {
-    let message   = document.getElementById('message').textContent;
-    let twitter   = document.getElementById('twitter').textContent;
-    let instagram = document.getElementById('instagram').textContent;
-    let tumblr    = document.getElementById('tumblr').textContent;
+    let message   = (<HTMLInputElement>document.getElementById('message')).value;
+    let twitter   = (<HTMLInputElement>document.getElementById('twitter')).value;
+    let instagram = (<HTMLInputElement>document.getElementById('instagram')).value;
+    let tumblr    = (<HTMLInputElement>document.getElementById('tumblr')).value;
     document.getElementById('submitform').style.display = 'none';
     document.getElementById('progress').style.display = 'block';
 
@@ -87,6 +88,17 @@ export class ContributeComponent implements OnInit {
     // Update progressbar
     document.getElementById('innerProgressBar').style.width = percent + '%';
     document.getElementById('percent').innerHTML = (Math.round(percent*100)/100) + '%';
+  }
+
+  Close = () => {
+    this.UpdateBar(0);
+    document.getElementById('submitform').style.display = 'inline-grid';
+    document.getElementById('progress').style.display = 'none';
+    document.getElementById('containerComponent').style.display = "none";
+  }
+
+  Open() {
+    document.getElementById('containerComponent').style.display = "block";
   }
 
 }

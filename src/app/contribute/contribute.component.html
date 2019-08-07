@@ -1,4 +1,5 @@
-<div id="container">
+<div id="containerComponent">
+  <span class="close" id="close">X</span>
   <form id="submitform" onsubmit="return false;">
     <label for="message">Message to Taylor:</label>
     <textarea name="message" id="message" placeholder="Tell Taylor why you love her, how she helped you or simply wish her a happy birthday!"></textarea>
@@ -11,7 +12,7 @@
     <br>
     <label for="image">Optional image/video to send</label>
     <input type="file" id="image" name="image" />
-    <br>
+    <p>Max 150MB</p>
     <input type="submit" id="submit" value="Submit" class="submit"/>
   </form>
   <div id="progress">
@@ -19,7 +20,7 @@
       <div id="innerProgressBar"></div>
       <span id="percent">0%</span>
     </div>
-    <a href="/" id="back">Back</a>
+    <span class="close" id="back" (click)="this.Close()">Close</span>
   </div>
 
 </div>

@@ -14,5 +14,6 @@ body, html {
 body {
   overflow-x: hidden;
   overflow-y: scroll;
-  height: calc(100% + 50px);
+  position: absolute;
+  top: 0;
 }
