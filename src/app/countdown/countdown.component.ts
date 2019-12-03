@@ -42,12 +42,12 @@ export class CountdownComponent implements OnInit {
       if (this.seconds.length !== 2) {
         this.seconds = '0' + this.seconds;
       }
-      if (event.elapsed) {
+      //if (event.elapsed) {
         if (!this.passed) {
           this.passed = true;
           this.done.emit();
         }
-      }
+      //}
     });
   }
 }

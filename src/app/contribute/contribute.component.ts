@@ -17,6 +17,7 @@ export class ContributeComponent implements OnInit {
   private error: Boolean;
   private uploadFinished: Boolean;
 
+
   constructor(private socket: Socket) { }
 
   ngOnInit() {

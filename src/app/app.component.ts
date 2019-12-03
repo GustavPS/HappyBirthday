@@ -25,6 +25,6 @@ export class AppComponent {
     setTimeout(() => {
       $('#container').css('display', 'none');
       this.canvas.play();
-    }, 10000);
+    }, 1); // 10 000
   }
 }

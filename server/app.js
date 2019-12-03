@@ -9,6 +9,7 @@ var server = https.createServer({
 });
 
 server.listen(5001);
+console.log("Listening on port 5001");
 var io      = require('socket.io').listen(server);
 
 
@@ -79,6 +80,24 @@ io.sockets.on('connection', function(socket) {
             removeFile(socket.fileId);
         }
         delete Files[socket.fileId];
+    });
+
+    socket.on('getPosts', function() {
+        console.log("Get posts");
+        let db = new sqlite3.Database(Database, function(err) {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+            db.all("SELECT * FROM Message;", [], (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                socket.emit('getPosts', rows);
+            });
+        });
+        db.close();
     });
 
     socket.on('start', function(data) {

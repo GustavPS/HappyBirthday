@@ -7,8 +7,8 @@ import { FireworkComponent } from './firework/firework.component';
 import { CanvasVideoComponent } from './canvas-video/canvas-video.component';
 import { ContributeComponent } from './contribute/contribute.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-//const config: SocketIoConfig = { url: 'http://localhost:5001', options: {} };
-const config: SocketIoConfig = { url: 'https://vmi288666.contaboserver.net:5001', options: {rejectUnauthorized: false} };
+const config: SocketIoConfig = { url: 'https://localhost:5001', options: {} };
+//const config: SocketIoConfig = { url: 'https://vmi288666.contaboserver.net:5001', options: {rejectUnauthorized: false} };
 
 @NgModule({
   declarations: [

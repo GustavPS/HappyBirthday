@@ -1,1 +1,38 @@
-<canvas id="canvas"></canvas>
+
+
+<!--<canvas id="canvas"></canvas>-->
+
+  <div class="container" id="postContainer">
+  <div class="row">
+    <div class="col-sm" *ngFor="let post of posts; let i = index" id="{{i}}">
+          <a href="http://207.180.199.119:8000/{{post.file}}">
+            <img *ngIf="post.file != ''" src='http://207.180.199.119:8000/{{post.file}}' />
+          </a>
+          <div class="bottom">
+            <div class="social">
+                <h6 *ngIf="post.twitter != ''" class="twitter">
+                  <span style="color: gray; font-size: 13px; opacity: 60%;">Twitter</span><br>
+                  <a href="https://twitter.com/{{post.twitter}}">
+                    <span *ngIf="post.twitter.indexOf('@') == -1">@</span>{{post.twitter}}
+                  </a>
+                </h6>
+                <h6 *ngIf="post.instagram != ''" class="instagram">
+                  <span style="color: gray; font-size: 13px; opacity: 60%;">Instagram</span><br>
+                  <a href="https://instagram.com/{{post.instagram}}">
+                    <span *ngIf="post.instagram.indexOf('@') == -1">@</span>{{post.instagram}}
+                  </a>
+                </h6>
+                <h6 *ngIf="post.tumblr != ''" class="tumblr">
+                  <span style="color: gray; font-size: 13px; opacity: 60%;">Tumblr</span><br>
+                  <a href="https://{{post.tumblr}}.tumblr.com">
+                      <span *ngIf="post.tumblr.indexOf('@') == -1">@</span>{{post.tumblr}}
+                  </a>
+                </h6>
+            </div>
+            <p>{{post.message}}</p>
+          </div>
+
+    </div>
+    
+  </div>
+</div>
